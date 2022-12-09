@@ -50,6 +50,20 @@ export const Product = styled('span', {
       fontSize: '$xl',
       fontWeight: 'bold',
       color: '$green300'
+    },
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.25rem'
+    },
+    button: {
+      lineHeight: 0,
+      color: '$white',
+      background: '$green500',
+      cursor: 'pointer',
+      borderRadius: 6,
+      padding: '0.75rem',
+      border: 0
     }
   },
 

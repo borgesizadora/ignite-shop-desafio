@@ -1,8 +1,11 @@
+import { MouseEvent } from 'react'
+
 import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { CartItemType, useCartContext } from '~/contexts/CartContext'
 import { stripe } from '~/lib/stripe'
 import { HomeContainer, Product } from '~/styles/pages/home'
 import { useKeenSlider } from 'keen-slider/react'
@@ -27,6 +30,13 @@ export default function Home({ products }: HomeProps) {
       spacing: 48
     }
   })
+  const { addItemToCart } = useCartContext()
+
+  const handelAddToCart = (e: MouseEvent<HTMLButtonElement>, item: CartItemType) => {
+    e.stopPropagation()
+
+    addItemToCart(item)
+  }
   return (
     <>
       <Head>
@@ -34,20 +44,22 @@ export default function Home({ products }: HomeProps) {
       </Head>
       <HomeContainer ref={sliderRef} className="keen-slider">
         {products.map((product) => (
-          <Link key={product.id} href={`/product/${product.id}`} prefetch={false}>
-            <Product className="keen-slider__slide">
-              <Image src={product.imageUrl} width={520} height={480} alt="" />
+          <Product key={product.id} className="keen-slider__slide">
+            <>
+              <Link href={`/product/${product.id}`} prefetch={false}>
+                <Image src={product.imageUrl} width={520} height={480} alt="" />
+              </Link>
               <footer>
                 <div>
                   <strong>{product.name}</strong>
                   <span>{product.price}</span>
                 </div>
-                <button type="button">
+                <button type="button" onClick={(e) => handelAddToCart(e, product)}>
                   <Handbag size={32} />
                 </button>
               </footer>
-            </Product>
-          </Link>
+            </>
+          </Product>
         ))}
       </HomeContainer>
     </>

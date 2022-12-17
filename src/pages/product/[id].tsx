@@ -5,9 +5,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
+import { useCartContext } from '~/contexts/CartContext'
 import { stripe } from '~/lib/stripe'
 import { ImageContainer, ProductContainer, ProductDetails } from '~/styles/pages/product'
-import axios from 'axios'
 import Stripe from 'stripe'
 
 interface ProductProps {
@@ -23,23 +23,27 @@ interface ProductProps {
 
 export default function ProductPage({ product }: ProductProps) {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+  const { addItemToCart } = useCartContext()
   async function handleByProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId
-      })
+    addItemToCart({
+      ...product
+    })
+    // try {
+    //   setIsCreatingCheckoutSession(true)
+    //   const response = await axios.post('/api/checkout', {
+    //     priceId: product.defaultPriceId
+    //   })
 
-      const { checkoutUrl } = response.data
+    //   const { checkoutUrl } = response.data
 
-      window.location.href = checkoutUrl
-    } catch (error) {
-      // Conectar com uma ferrramenta de observabilidade (Datalog / Sentry)
+    //   window.location.href = checkoutUrl
+    // } catch (error) {
+    //   // Conectar com uma ferrramenta de observabilidade (Datalog / Sentry)
 
-      setIsCreatingCheckoutSession(false)
+    //   setIsCreatingCheckoutSession(false)
 
-      alert('Falha ao redirecionar ao checkout!')
-    }
+    //   alert('Falha ao redirecionar ao checkout!')
+    // }
   }
 
   const { isFallback } = useRouter()

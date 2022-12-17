@@ -1,7 +1,9 @@
-import { createContext, ReactNode, useContext, useReducer } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useReducer } from 'react'
 
+import testJSON from '~/../test.json'
 import { CartActions } from '~/reducers/cart/actions'
 import { cartReducer } from '~/reducers/cart/reducer'
+import { parseCookies, setCookie } from 'nookies'
 
 interface ICartContextProvider {
   children: ReactNode
@@ -24,8 +26,13 @@ interface CartContextType {
 const CartContext = createContext({} as CartContextType)
 
 export const CartContextProvider = ({ children }: ICartContextProvider) => {
+  const { '@ignite-shop:items-in-cart-1.0.0': cartCookie } = parseCookies()
+
+  const cart = cartCookie ? JSON.parse(cartCookie) : []
+  console.log(cart)
+
   const [cartState, dispatch] = useReducer(cartReducer, {
-    itemsInCart: []
+    itemsInCart: [...cart]
   })
   const { itemsInCart } = cartState
 
@@ -40,6 +47,14 @@ export const CartContextProvider = ({ children }: ICartContextProvider) => {
     return (total += 1)
   }, 0)
 
+  useEffect(() => {
+    const cartJSON = JSON.stringify(itemsInCart)
+    setCookie(null, '@ignite-shop:items-in-cart-1.0.0', cartJSON, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/'
+    })
+  }, [itemsInCart])
+
   return (
     <CartContext.Provider
       value={{
@@ -52,5 +67,4 @@ export const CartContextProvider = ({ children }: ICartContextProvider) => {
     </CartContext.Provider>
   )
 }
-
 export const useCartContext = () => useContext(CartContext)

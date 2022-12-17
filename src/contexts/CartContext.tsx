@@ -1,8 +1,8 @@
-import { createContext, ReactNode, useContext, useEffect, useReducer } from 'react'
+import { createContext, ReactNode, useContext, useEffect, useReducer, useState } from 'react'
 
-import testJSON from '~/../test.json'
 import { CartActions } from '~/reducers/cart/actions'
 import { cartReducer } from '~/reducers/cart/reducer'
+import { applyMoneyMask, removeMoneyMask } from '~/utils/formatters'
 import { parseCookies, setCookie } from 'nookies'
 
 interface ICartContextProvider {
@@ -20,19 +20,24 @@ interface CartContextType {
   itemsInCart: CartItemType[]
   addItemToCart: (item: CartItemType) => void
   removeItemFromCart: (id: string) => void
-  totalItemsInCart: number
+  totalItemsInCart: {
+    amount: number
+    priceTotal: string
+  }
 }
 
 const CartContext = createContext({} as CartContextType)
 
 export const CartContextProvider = ({ children }: ICartContextProvider) => {
   const { '@ignite-shop:items-in-cart-1.0.0': cartCookie } = parseCookies()
-
-  const cart = cartCookie ? JSON.parse(cartCookie) : []
-  console.log(cart)
+  const cartItemsInitialValues = (cartCookie ? JSON.parse(cartCookie) : []) as CartItemType[]
+  const [totalItemsInCart, setTotalItemsInCart] = useState<CartContextType['totalItemsInCart']>({
+    amount: 0,
+    priceTotal: 'R$ 0,00'
+  })
 
   const [cartState, dispatch] = useReducer(cartReducer, {
-    itemsInCart: [...cart]
+    itemsInCart: [...cartItemsInitialValues]
   })
   const { itemsInCart } = cartState
 
@@ -43,15 +48,23 @@ export const CartContextProvider = ({ children }: ICartContextProvider) => {
   function removeItemFromCart(id: string) {
     dispatch({ type: CartActions.REMOVE_ITEM_FROM_CART, payload: { itemId: id } })
   }
-  const totalItemsInCart = itemsInCart.reduce((total, item) => {
-    return (total += 1)
-  }, 0)
 
   useEffect(() => {
     const cartJSON = JSON.stringify(itemsInCart)
     setCookie(null, '@ignite-shop:items-in-cart-1.0.0', cartJSON, {
       maxAge: 30 * 24 * 60 * 60,
       path: '/'
+    })
+    setTotalItemsInCart({
+      amount: itemsInCart.reduce((total) => {
+        return (total += 1)
+      }, 0),
+      priceTotal: applyMoneyMask(
+        itemsInCart.reduce((total, item) => {
+          const itemPrice = removeMoneyMask(item.price)
+          return (total += itemPrice)
+        }, 0)
+      )
     })
   }, [itemsInCart])
 

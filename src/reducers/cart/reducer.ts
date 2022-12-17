@@ -17,7 +17,7 @@ export function cartReducer(state: CartState, action: CartActionsType) {
   }
   if (action.type === CartActions.REMOVE_ITEM_FROM_CART) {
     const filteredItems = state.itemsInCart.filter((item) => item.id !== action.payload.itemId)
-    return { ...state, newItems: filteredItems }
+    return { ...state, itemsInCart: filteredItems }
   }
 
   return state

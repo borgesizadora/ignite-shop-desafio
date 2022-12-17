@@ -12,15 +12,19 @@ import logoImg from '../../assets/logo.svg'
 export const Header = () => {
   const { totalItemsInCart } = useCartContext()
 
+  const shouldDisplayCartAmount = totalItemsInCart.amount > 0
+
   return (
     <HeaderContainer>
       <Image src={logoImg} alt="" />
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <button type="button" title="Ver carrinho">
-            <Handbag size={24} />
-            {totalItemsInCart > 0 && <span>{totalItemsInCart}</span>}
-          </button>
+          <div>
+            <button type="button" title="Ver carrinho">
+              <Handbag size={24} />
+              {shouldDisplayCartAmount && <span>{totalItemsInCart.amount}</span>}
+            </button>
+          </div>
         </Dialog.Trigger>
         <Cart />
       </Dialog.Root>

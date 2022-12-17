@@ -17,6 +17,8 @@ import * as Dialog from '@radix-ui/react-dialog'
 
 export const Cart = () => {
   const { itemsInCart, totalItemsInCart } = useCartContext()
+  const { removeItemFromCart } = useCartContext()
+
   return (
     <Dialog.Portal>
       <CartContainer>
@@ -35,7 +37,9 @@ export const Cart = () => {
                 <div>
                   {item.name}
                   <span>{item.price}</span>
-                  <RemoveItemButton type="button">Remover</RemoveItemButton>
+                  <RemoveItemButton type="button" onClick={() => removeItemFromCart(item.id)}>
+                    Remover
+                  </RemoveItemButton>
                 </div>
               </CartItem>
             ))}
@@ -43,10 +47,10 @@ export const Cart = () => {
 
         <footer>
           <CartItemsAmount>
-            Quantidade <span>{totalItemsInCart} itens</span>
+            Quantidade <span>{totalItemsInCart.amount} itens</span>
           </CartItemsAmount>
           <CartTotal>
-            Valor total <span>R$ 270,00</span>
+            Valor total <span>{totalItemsInCart.priceTotal}</span>
           </CartTotal>
           <button type="button">Finalizar compra</button>
         </footer>

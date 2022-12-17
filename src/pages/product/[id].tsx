@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { useCartContext } from '~/contexts/CartContext'
 import { stripe } from '~/lib/stripe'
 import { ImageContainer, ProductContainer, ProductDetails } from '~/styles/pages/product'
+import { applyMoneyMask } from '~/utils/formatters'
 import Stripe from 'stripe'
 
 interface ProductProps {
@@ -94,10 +95,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
         id: product.id,
         name: product.name,
         imageUrl: product.images[0],
-        price: new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL'
-        }).format(price.unit_amount ? price.unit_amount / 100 : 0),
+        price: applyMoneyMask(price.unit_amount ? price.unit_amount / 100 : 0),
         description: product.description,
         defaultPriceId: price.id
       }

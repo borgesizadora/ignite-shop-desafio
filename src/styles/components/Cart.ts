@@ -31,7 +31,18 @@ export const CartContainer = styled(Dialog.Content, {
     padding: '1.25rem 0',
     width: '100%',
     border: 0,
-    borderRadius: 8
+    borderRadius: 8,
+    '&:not(disabled)': {
+      cursor: 'pointer'
+    },
+    '&:hover:not(:disabled)': {
+      transition: 'background-color 0.2s',
+      backgroundColor: '$green300'
+    },
+    '&:disabled': {
+      cursor: 'not-allowed',
+      opacity: '70%'
+    }
   }
 })
 
@@ -73,7 +84,11 @@ export const RemoveItemButton = styled('button', {
   fontWeight: 700,
   fontSize: '1rem',
   cursor: 'pointer',
-  width: 'fit-content'
+  width: 'fit-content',
+  '&:hover:not(:disabled)': {
+    transition: 'color 0.2s',
+    color: '$green300'
+  }
 })
 
 export const CartItemImg = styled('div', {
@@ -113,4 +128,9 @@ export const CartTotal = styled('div', {
   span: {
     fontSize: '1.5rem'
   }
+})
+
+export const EmptyCart = styled('h3', {
+  textAlign: 'center',
+  color: '$gray300'
 })

@@ -14,12 +14,14 @@ export interface CartItemType {
   imageUrl: string
   name: string
   price: string
+  defaultPriceId: string
 }
 
 interface CartContextType {
   itemsInCart: CartItemType[]
   addItemToCart: (item: CartItemType) => void
   removeItemFromCart: (id: string) => void
+  clearCart: () => void
   totalItemsInCart: {
     amount: number
     priceTotal: string
@@ -49,6 +51,10 @@ export const CartContextProvider = ({ children }: ICartContextProvider) => {
     dispatch({ type: CartActions.REMOVE_ITEM_FROM_CART, payload: { itemId: id } })
   }
 
+  function clearCart() {
+    dispatch({ type: CartActions.CLEAR_CART })
+  }
+
   useEffect(() => {
     const cartJSON = JSON.stringify(itemsInCart)
     setCookie(null, '@ignite-shop:items-in-cart-1.0.0', cartJSON, {
@@ -74,6 +80,7 @@ export const CartContextProvider = ({ children }: ICartContextProvider) => {
         itemsInCart,
         addItemToCart,
         removeItemFromCart,
+        clearCart,
         totalItemsInCart
       }}>
       {children}

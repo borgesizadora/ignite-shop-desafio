@@ -63,7 +63,11 @@ export const Product = styled('span', {
       cursor: 'pointer',
       borderRadius: 6,
       padding: '0.75rem',
-      border: 0
+      border: 0,
+      '&:hover': {
+        transition: 'background-color 0.2s',
+        backgroundColor: '$green300'
+      }
     }
   },
 

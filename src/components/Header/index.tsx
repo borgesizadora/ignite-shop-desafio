@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Cart } from '~/components/Cart'
 import { useCartContext } from '~/contexts/CartContext'
@@ -16,7 +17,9 @@ export const Header = () => {
 
   return (
     <HeaderContainer>
-      <Image src={logoImg} alt="" />
+      <Link href="/">
+        <Image src={logoImg} alt="" />
+      </Link>
       <Dialog.Root>
         <Dialog.Trigger asChild>
           <div>

@@ -19,6 +19,9 @@ export function cartReducer(state: CartState, action: CartActionsType) {
     const filteredItems = state.itemsInCart.filter((item) => item.id !== action.payload.itemId)
     return { ...state, itemsInCart: filteredItems }
   }
+  if (action.type === CartActions.CLEAR_CART) {
+    return { ...state, itemsInCart: [] }
+  }
 
   return state
 }

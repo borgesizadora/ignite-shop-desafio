@@ -30,23 +30,31 @@ export const SuccessContainer = styled('main', {
     fontWeight: 'bold',
 
     '&:hover': {
-      color: '$green300'
+      color: '$green300',
+      transition: 'color 0.2s'
     }
   }
+})
+
+export const ProductsListContainer = styled('div', {
+  display: 'flex',
+  justifyContent: 'center'
 })
 
 export const ImageContainer = styled('div', {
   width: '100%',
   maxWidth: 130,
-  height: 145,
+  height: 130,
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
-  borderRadius: 8,
+  borderRadius: 999,
   padding: '0.25rem',
   marginTop: '4rem',
 
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  boxShadow: '0px 0px 60px rgba(0, 0, 0, 0.8)',
+  marginRight: '-5%',
 
   img: {
     objectFit: 'cover'

@@ -6,17 +6,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { stripe } from '~/lib/stripe'
-import { ImageContainer, SuccessContainer } from '~/styles/pages/success'
+import { ImageContainer, ProductsListContainer, SuccessContainer } from '~/styles/pages/success'
 import Stripe from 'stripe'
 
 interface SuccessProps {
   customerName: string
-  product: {
+  products: {
     name: string
     imageUrl: string
-  }
+  }[]
 }
-const Success = ({ customerName, product }: SuccessProps) => {
+const Success = ({ customerName, products }: SuccessProps) => {
   return (
     <>
       <Head>
@@ -26,13 +26,18 @@ const Success = ({ customerName, product }: SuccessProps) => {
       </Head>
       <SuccessContainer>
         <h1>Compra efetuada!</h1>
-        <ImageContainer>
-          <Image src={product.imageUrl} width={120} height={110} alt="" />
-        </ImageContainer>
+        <ProductsListContainer>
+          {products.map((product) => (
+            <ImageContainer key={product.name}>
+              <Image src={product.imageUrl} width={120} height={110} alt="" />
+            </ImageContainer>
+          ))}
+        </ProductsListContainer>
         <p>
           Uhuul
-          <strong> {customerName}</strong>, sua
-          <strong> {product.name} </strong>
+          <strong> {customerName}</strong>, sua compra de
+          <span> {products.length} </span>
+          {products.length === 1 ? 'camiseta ' : 'camisetas '}
           já está a caminho da sua casa.
         </p>
         <Link href="/">Voltar ao catálogo</Link>
@@ -61,15 +66,18 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const customerName = session.customer_details?.name
 
-  const product = session?.line_items?.data[0].price?.product as Stripe.Product
+  const products = session?.line_items?.data.map((product) => {
+    const item = product?.price?.product as Stripe.Product
+    return {
+      name: item.name,
+      imageUrl: item.images[0]
+    }
+  })
 
   return {
     props: {
       customerName,
-      product: {
-        name: product.name,
-        imageUrl: product.images[0]
-      }
+      products
     }
   }
 }

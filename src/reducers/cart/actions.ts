@@ -1,7 +1,8 @@
 import { CartItemType } from './../../contexts/CartContext'
 export enum CartActions {
   REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART',
-  ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART'
+  ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART',
+  CLEAR_CART = 'CLEAR_CART'
 }
 export type CartActionsType =
   | {
@@ -15,4 +16,7 @@ export type CartActionsType =
       payload: {
         item: CartItemType
       }
+    }
+  | {
+      type: CartActions.CLEAR_CART
     }
